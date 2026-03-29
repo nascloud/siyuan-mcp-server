@@ -624,12 +624,13 @@ wheels = [
 
 [[package]]
 name = "siyuan-mcp-server"
-version = "0.22.0"
+version = "0.25.0"
 source = { editable = "." }
 dependencies = [
     { name = "detect-secrets" },
     { name = "mcp" },
     { name = "requests" },
+    { name = "uvicorn" },
 ]
 
 [package.metadata]
@@ -637,6 +638,7 @@ requires-dist = [
     { name = "detect-secrets" },
     { name = "mcp" },
     { name = "requests" },
+    { name = "uvicorn" },
 ]
 
 [[package]]

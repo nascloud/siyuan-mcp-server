@@ -13,6 +13,7 @@ dependencies = [
     "mcp",
     "requests",
     "detect-secrets",
+    "uvicorn",
 ]
 
 [build-system]

@@ -1,3 +1,4 @@
+import argparse
 import base64
 import difflib
 import json
@@ -6,6 +7,7 @@ import re
 from typing import Any, Dict, List, Optional, Tuple
 
 import requests
+import uvicorn
 from mcp.server.fastmcp import FastMCP
 
 from .tools import is_siyuan_timestamp, mask_sensitive_data, parse_and_mask_kramdown
@@ -1912,7 +1914,42 @@ def get_block_diffs(
 
 def main() -> None:
     """CLI entrypoint for uv run / project.scripts."""
-    mcp.run()
+    parser = argparse.ArgumentParser(description="Siyuan MCP Server")
+    parser.add_argument(
+        "--transport",
+        type=str,
+        default="stdio",
+        choices=["stdio", "streamable-http", "sse"],
+        help="Transport protocol (default: stdio)",
+    )
+    parser.add_argument(
+        "--host",
+        type=str,
+        default="0.0.0.0",
+        help="Host to bind to (default: 0.0.0.0)",
+    )
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=8000,
+        help="Port to bind to (default: 8000)",
+    )
+    parser.add_argument(
+        "--path",
+        type=str,
+        default="/mcp/",
+        help="URL path for HTTP transport (default: /mcp/)",
+    )
+    args = parser.parse_args()
+
+    if args.transport == "stdio":
+        mcp.run()
+    elif args.transport == "streamable-http":
+        app = mcp.streamable_http_app()
+        uvicorn.run(app, host=args.host, port=args.port)
+    elif args.transport == "sse":
+        app = mcp.sse_app()
+        uvicorn.run(app, host=args.host, port=args.port)
 
 
 if __name__ == "__main__":

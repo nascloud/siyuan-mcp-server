@@ -147,6 +147,80 @@ pip install uv
 - `uv run` 会使用项目的虚拟环境
 - 代码修改后无需重新构建
 
+### 方式三：Docker 部署（streamable-http）
+
+本项目支持通过 Docker 部署为 HTTP 服务，使用 MCP 1.0 的 streamable-http 传输协议。
+
+#### 构建 Docker 镜像
+
+```bash
+docker build -t siyuan-mcp-server .
+```
+
+#### 使用 docker-compose 运行（推荐）
+
+1. 复制并配置环境变量：
+```bash
+cp .env.example .env
+# 编辑 .env 文件，设置 SIYUAN_API_TOKEN
+```
+
+2. 启动服务：
+```bash
+docker-compose up -d
+```
+
+#### 直接使用 Docker 运行
+
+```bash
+docker run -d \
+  --name siyuan-mcp-server \
+  -p 8000:8000 \
+  -e SIYUAN_API_TOKEN=your_token_here \
+  -e SIYUAN_API_URL=http://host.docker.internal:6806 \
+  siyuan-mcp-server
+```
+
+**注意**：如果思源笔记运行在宿主机而非 Docker 中，请使用 `host.docker.internal` 作为思源服务器地址。
+
+#### 配置 MCP 客户端连接
+
+服务启动后，可通过以下 URL 连接：
+
+```
+http://localhost:8000/mcp/
+```
+
+**Claude Desktop 配置示例**：
+
+```json
+{
+  "mcpServers": {
+    "siyuan": {
+      "url": "http://localhost:8000/mcp/"
+    }
+  }
+}
+```
+
+#### 自定义运行参数
+
+Docker 镜像支持以下环境变量和参数：
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `--transport` | 传输协议 | `streamable-http` |
+| `--host` | 监听地址 | `0.0.0.0` |
+| `--port` | 监听端口 | `8000` |
+| `--path` | URL 路径 | `/mcp/` |
+
+#### 传输协议说明
+
+- `stdio`：默认本地模式，适合 Claude Desktop 直接运行
+- `streamable-http`：MCP 1.0 推荐的网络传输协议，支持双向流式通信
+- `http`：传统 HTTP 模式
+- `sse`：Server-Sent Events 模式
+
 ## 已实现的工具
 
 所有工具均在 `src/siyuan_mcp_server/__init__.py` 文件中定义。

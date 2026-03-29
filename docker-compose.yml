@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  siyuan-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: siyuan-mcp-server
+    ports:
+      - "8000:8000"
+    environment:
+      # 思源笔记 API Token（请修改为你的实际 Token）
+      - SIYUAN_API_TOKEN=${SIYUAN_API_TOKEN}
+      # 思源笔记服务器地址（如果思源不在本机或使用了非标准端口，请修改）
+      - SIYUAN_API_URL=${SIYUAN_API_URL:-http://host.docker.internal:6806}
+    # 可选：添加重启策略
+    restart: unless-stopped
+    # 可选：添加健康检查
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/mcp/')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+# 使用说明：
+# 1. 设置环境变量 SIYUAN_API_TOKEN 为你的思源笔记 API Token
+# 2. 如果思源笔记不在本机运行，修改 SIYUAN_API_URL
+# 3. 运行 docker-compose up -d 启动服务
+# 4. 访问 http://localhost:8000/mcp/ 查看服务
