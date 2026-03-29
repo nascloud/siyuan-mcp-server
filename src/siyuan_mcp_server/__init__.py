@@ -11,6 +11,17 @@ from mcp.server.fastmcp import FastMCP
 from .tools import is_siyuan_timestamp, mask_sensitive_data, parse_and_mask_kramdown
 
 
+def _get_siyuan_base_url() -> str:
+    """获取思源笔记服务器基础 URL。
+
+    优先使用环境变量 SIYUAN_API_URL，若未设置则使用默认的本地地址。
+
+    Returns:
+        思源服务器基础 URL（不含尾部斜杠）
+    """
+    return os.getenv("SIYUAN_API_URL", "http://127.0.0.1:6806").rstrip("/")
+
+
 def _post_to_siyuan_api(
     endpoint: str, json_data: Optional[Dict[str, Any]] = None
 ) -> Any:
@@ -40,7 +51,8 @@ def _post_to_siyuan_api(
     }
 
     # 发送请求
-    url = f"http://127.0.0.1:6806{endpoint}"
+    base_url = _get_siyuan_base_url()
+    url = f"{base_url}{endpoint}"
     try:
         response = requests.post(url, json=json_data, headers=headers)
         response.raise_for_status()
@@ -1388,7 +1400,8 @@ def get_file(path: str) -> str:
         "Content-Type": "application/json",
     }
 
-    url = "http://127.0.0.1:6806/api/file/getFile"
+    base_url = _get_siyuan_base_url()
+    url = f"{base_url}/api/file/getFile"
     try:
         response = requests.post(url, json={"path": path}, headers=headers)
         response.raise_for_status()

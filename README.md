@@ -51,6 +51,30 @@ pip install uv
     uv sync
     ```
 
+### 环境变量配置
+
+| 环境变量 | 必填 | 默认值 | 说明 |
+|---------|------|--------|------|
+| `SIYUAN_API_TOKEN` | 是 | - | 思源笔记 API Token（在思源笔记设置中获取） |
+| `SIYUAN_API_URL` | 否 | `http://127.0.0.1:6806` | 思源笔记服务器地址，用于连接远程服务器 |
+
+**连接远程思源服务器示例：**
+
+```json
+{
+  "mcpServers": {
+    "siyuan": {
+      "command": "uvx",
+      "args": ["siyuan-mcp-server"],
+      "env": {
+        "SIYUAN_API_TOKEN": "your_token_here",
+        "SIYUAN_API_URL": "http://192.168.1.100:6806"
+      }
+    }
+  }
+}
+```
+
 
 ## 如何运行
 
