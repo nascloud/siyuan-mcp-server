@@ -7,14 +7,14 @@ WORKDIR /app
 # 安装 uv
 RUN pip install uv
 
+# 复制源代码（uv sync 需要源代码来构建模块）
+COPY src/ ./src/
+
 # 复制依赖文件
 COPY pyproject.toml uv.lock ./
 
 # 安装依赖
 RUN uv sync --frozen --no-dev
-
-# 复制源代码
-COPY src/ ./src/
 
 # 创建非 root 用户
 RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
