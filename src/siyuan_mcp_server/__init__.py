@@ -1946,10 +1946,26 @@ def main() -> None:
         mcp.run()
     elif args.transport == "streamable-http":
         app = mcp.streamable_http_app()
-        uvicorn.run(app, host=args.host, port=args.port)
+        # 允许代理转发，禁用严格的 Host header 检查
+        config = uvicorn.Config(
+            app,
+            host=args.host,
+            port=args.port,
+            proxy_headers=True,
+            forwarded_allow_ips="*",
+        )
+        uvicorn.Server(config).run()
     elif args.transport == "sse":
         app = mcp.sse_app()
-        uvicorn.run(app, host=args.host, port=args.port)
+        # 允许代理转发，禁用严格的 Host header 检查
+        config = uvicorn.Config(
+            app,
+            host=args.host,
+            port=args.port,
+            proxy_headers=True,
+            forwarded_allow_ips="*",
+        )
+        uvicorn.Server(config).run()
 
 
 if __name__ == "__main__":
