@@ -10,10 +10,9 @@ readme = "README.md"
 readme-content-type = "text/markdown"
 requires-python = ">=3.10"
 dependencies = [
-    "mcp",
+    "fastmcp",
     "requests",
     "detect-secrets",
-    "uvicorn",
 ]
 
 [build-system]

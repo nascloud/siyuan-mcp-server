@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import requests
 import uvicorn
-from mcp.server.fastmcp import FastMCP
+from fastmcp import FastMCP
 
 from .tools import is_siyuan_timestamp, mask_sensitive_data, parse_and_mask_kramdown
 
@@ -1919,7 +1919,7 @@ def main() -> None:
         "--transport",
         type=str,
         default="stdio",
-        choices=["stdio", "streamable-http", "sse"],
+        choices=["stdio", "http", "sse"],
         help="Transport protocol (default: stdio)",
     )
     parser.add_argument(
@@ -1944,28 +1944,20 @@ def main() -> None:
 
     if args.transport == "stdio":
         mcp.run()
-    elif args.transport == "streamable-http":
-        app = mcp.streamable_http_app()
-        # 允许代理转发，禁用严格的 Host header 检查
-        config = uvicorn.Config(
-            app,
+    elif args.transport == "http":
+        mcp.run(
+            transport="http",
             host=args.host,
             port=args.port,
-            proxy_headers=True,
-            forwarded_allow_ips="*",
+            path=args.path,
         )
-        uvicorn.Server(config).run()
     elif args.transport == "sse":
-        app = mcp.sse_app()
-        # 允许代理转发，禁用严格的 Host header 检查
-        config = uvicorn.Config(
-            app,
+        mcp.run(
+            transport="sse",
             host=args.host,
             port=args.port,
-            proxy_headers=True,
-            forwarded_allow_ips="*",
+            path=args.path,
         )
-        uvicorn.Server(config).run()
 
 
 if __name__ == "__main__":

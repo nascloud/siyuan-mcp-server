@@ -8,7 +8,7 @@
 - **目标**: 为思源笔记提供 MCP 工具接口
 - **Python 版本**: >= 3.10
 - **包管理**: uv
-- **MCP SDK**: FastMCP (mcp.server.fastmcp)
+- **MCP SDK**: FastMCP (fastmcp)
 
 ## 构建与测试命令
 
@@ -65,7 +65,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 # 第三方库
 import requests
-from mcp.server.fastmcp import FastMCP
+from fastmcp import FastMCP
 
 # 本地模块
 from .tools import is_siyuan_timestamp, mask_sensitive_data

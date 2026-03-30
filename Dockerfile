@@ -21,4 +21,4 @@ USER appuser
 EXPOSE 8000
 
 # 默认运行方式
-CMD ["python", "-m", "siyuan_mcp_server", "--transport", "streamable-http", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python", "-m", "siyuan_mcp_server", "--transport", "http", "--host", "0.0.0.0", "--port", "8000"]
